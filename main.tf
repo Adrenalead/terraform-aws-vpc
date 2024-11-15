@@ -235,6 +235,7 @@ resource "aws_subnet" "private" {
   vpc_id                                         = local.vpc.id
   cidr_block                                     = can(local.calculated_subnets[split("/", each.key)[0]][split("/", each.key)[1]]) ? local.calculated_subnets[split("/", each.key)[0]][split("/", each.key)[1]] : null
   ipv6_cidr_block                                = can(local.calculated_subnets_ipv6[split("/", each.key)[0]][split("/", each.key)[1]]) ? local.calculated_subnets_ipv6[split("/", each.key)[0]][split("/", each.key)[1]] : null
+  enable_dns64                                   = can(local.calculated_subnets_ipv6[split("/", each.key)[0]][split("/", each.key)[1]])  ? try(var.subnets[split("/", each.key)[0]].enable_dns64, false) : false
   ipv6_native                                    = contains(local.subnets_with_ipv6_native, split("/", each.key)[0]) ? true : false
   map_public_ip_on_launch                        = contains(local.subnets_with_ipv6_native, split("/", each.key)[0]) ? null : false
   assign_ipv6_address_on_creation                = contains(local.subnets_with_ipv6_native, split("/", each.key)[0]) ? true : try(var.subnets[each.key].assign_ipv6_address_on_creation, false)
